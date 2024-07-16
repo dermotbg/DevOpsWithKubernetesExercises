@@ -1,0 +1,17 @@
+apiVersion: logoutput/v1
+kind: Deployment
+metadata:
+  name: logoutput-dep
+spec:
+  replicas: 1
+  selector:
+    matchlabels:
+      app: logoutput
+    template:
+      metadata:
+        labels:
+          app: logoutput
+      spec:
+        containers:
+          - name: logoutput
+            image: dermotbg/logoutput:v1
