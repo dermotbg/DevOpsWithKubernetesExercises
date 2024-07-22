@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: todo
-          image: dermotbg/todo:v1.4
+          image: dermotbg/todo:v1.5
           env:
             - name: PORT
               value: "3000" 

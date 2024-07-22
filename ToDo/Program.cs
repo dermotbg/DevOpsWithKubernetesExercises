@@ -4,7 +4,7 @@ var config = builder.Configuration;
 // set port number with export PORT=<PORTNUMBER> command
 var PORT = Environment.GetEnvironmentVariable("PORT") ?? "3000";
 
-builder.WebHost.UseUrls($"http://localhost:{PORT}");
+builder.WebHost.UseUrls($"http://0.0.0.0:{PORT}");
 
 Console.WriteLine($"Server running on PORT: {PORT}");
 
