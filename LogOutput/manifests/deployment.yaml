@@ -14,4 +14,4 @@ spec:
     spec:
       containers:
         - name: logoutput
-          image: dermotbg/logoutput:latest
+          image: dermotbg/logoutput:v2
