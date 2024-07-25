@@ -10,7 +10,7 @@ Console.WriteLine($"Server running on PORT: {PORT}");
 
 var app = builder.Build();
 
-app.MapGet("/pingpong", () => 
+app.MapGet("/", () => 
 {
   return Results.Content($"Pong {CounterService.IncrementCounter()}");
   
