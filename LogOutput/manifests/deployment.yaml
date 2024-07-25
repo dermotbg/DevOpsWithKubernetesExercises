@@ -12,6 +12,17 @@ spec:
       labels:
         app: logoutput
     spec:
+      volumes:
+        - name: shared-files
+          emptyDir: {}
       containers:
         - name: logoutput
-          image: dermotbg/logoutput:v2
+          image: dermotbg/logoutput:v6
+          volumeMounts:
+          - name: shared-files
+            mountPath: /usr/src/app/files
+        - name: logtimestamp
+          image: dermotbg/logtimestamp:v4
+          volumeMounts:
+          - name: shared-files
+            mountPath: /usr/src/app/files

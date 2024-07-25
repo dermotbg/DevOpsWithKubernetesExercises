@@ -3,8 +3,7 @@ while (await timer.WaitForNextTickAsync())
 {
   try
   {
-    // StreamWriter sw = new StreamWriter("/usr/src/app/files/stamp.txt");
-    StreamWriter sw = new StreamWriter("/home/dermot/Desktop/repos/DevOpsWithKubernetesExercises/LogTimeStamp/output/test.txt");
+    StreamWriter sw = new StreamWriter("/usr/src/app/files/stamp.txt");
 
     sw.WriteLine($"{DateTime.Now}");
 
