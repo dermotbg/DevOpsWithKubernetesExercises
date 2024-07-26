@@ -12,7 +12,8 @@ Console.WriteLine($"Server running on PORT: {PORT}");
 var app = builder.Build();
 app.UseStaticFiles();
 
-string prevLine = "";
+string prevStamp = "";
+string prevPong = "";
 string prevOutput = "";
 
 app.MapGet("/", () => 
@@ -20,26 +21,29 @@ app.MapGet("/", () =>
   try
   {
     StreamReader sr = new StreamReader("/usr/src/app/files/stamp.txt");
+    StreamReader sr2 = new StreamReader("/usr/src/app/files/pong.txt");
   
-    string? line = sr.ReadLine();
+    string? stamp = sr.ReadLine();
+    string? pong = sr2.ReadLine();
 
     // Only generate new Guid if data in text file has changed. 
-    if(prevOutput is not null && line == prevLine)
+    if(prevOutput is not null && stamp == prevStamp && pong == prevPong)
     {
-      return prevOutput;
+      return $"{prevOutput}";
     }
 
-    if(line is null)
+    if(stamp is null || pong is null)
     {
-      return "File is empty or does not exist";
+      return "Generating data...";
     }
 
-    Console.WriteLine(line);
+    Console.WriteLine(stamp);
 
-    string output = $"{line}: {Guid.NewGuid()}";
+    string output = $"{stamp}\n{pong}";
 
     // store output to memory for requests within the 5 second block. 
-    prevLine = line;
+    prevStamp = stamp;
+    prevPong = pong;
     prevOutput = output;
     
     return output;

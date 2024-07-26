@@ -10,10 +10,23 @@ Console.WriteLine($"Server running on PORT: {PORT}");
 
 var app = builder.Build();
 
-app.MapGet("/", () => 
+app.MapGet("/pingpong", () => 
 {
-  return Results.Content($"Pong {CounterService.IncrementCounter()}");
-  
+  try
+  {
+    StreamWriter sw = new StreamWriter("/usr/src/app/files/pong.txt");
+
+    CounterService.IncrementCounter();
+
+    sw.WriteLine($"Pongs: {CounterService.GetCounter()}");
+
+    sw.Close();
+  }
+  catch(Exception e)
+  {
+    Console.WriteLine("Exception: " + e.Message);
+  }
+  return Results.Content($"Pongs: {CounterService.GetCounter()}");
 });
 
 app.Run();
@@ -21,6 +34,10 @@ app.Run();
 public static class CounterService
 {
   private static int _counter = 0;
+  public static int GetCounter()
+  {
+    return _counter;
+  }
   public static int IncrementCounter()
   {
     return _counter++;

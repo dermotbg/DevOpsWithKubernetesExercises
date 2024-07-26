@@ -5,7 +5,7 @@ while (await timer.WaitForNextTickAsync())
   {
     StreamWriter sw = new StreamWriter("/usr/src/app/files/stamp.txt");
 
-    sw.WriteLine($"{DateTime.Now}");
+    sw.WriteLine($"{DateTime.Now}: {Guid.NewGuid()}");
 
     sw.Close();
   }

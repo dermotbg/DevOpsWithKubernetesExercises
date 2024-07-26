@@ -12,6 +12,13 @@ spec:
       labels:
         app: pingpong
     spec:
+      volumes:
+        - name: shared-files
+          persistentVolumeClaim:
+            claimName: logoutput-claim
       containers:
         - name: pingpong
-          image: dermotbg/ping-pong:v4
+          image: dermotbg/ping-pong:v7
+          volumeMounts:
+          - name: shared-files
+            mountPath: /usr/src/app/files
