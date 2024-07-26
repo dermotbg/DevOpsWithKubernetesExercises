@@ -1,3 +1,5 @@
+using Microsoft.Extensions.FileProviders;
+
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
@@ -10,6 +12,10 @@ Console.WriteLine($"Server running on PORT: {PORT}");
 
 var app = builder.Build();
 app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+  FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "files")),
+});
 
 app.MapGet("/", () => 
 {

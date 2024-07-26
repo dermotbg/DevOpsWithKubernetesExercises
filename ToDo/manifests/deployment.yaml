@@ -12,9 +12,21 @@ spec:
       labels:
         app: todo
     spec:
+      volumes:
+        - name: todo-files
+          persistentVolumeClaim:
+            claimName: todo-claim
       containers:
         - name: todo
-          image: dermotbg/todo:v1.5
+          image: dermotbg/todo:v2.5.4
           env:
             - name: PORT
               value: "3000" 
+          volumeMounts:
+          - name: todo-files
+            mountPath: /usr/src/app/files
+        - name: todo-image-source
+          image: dermotbg/todo-image-source:v0.4
+          volumeMounts:
+          - name: todo-files
+            mountPath: /usr/src/app/files
