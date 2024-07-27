@@ -18,7 +18,7 @@ spec:
             claimName: logoutput-claim
       containers:
         - name: logoutput
-          image: dermotbg/logoutput:v7.1.2
+          image: dermotbg/logoutput:v7.5.2
           volumeMounts:
           - name: shared-files
             mountPath: /usr/src/app/files

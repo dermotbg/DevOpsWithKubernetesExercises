@@ -10,17 +10,18 @@ Console.WriteLine($"Server running on PORT: {PORT}");
 
 var app = builder.Build();
 
+app.MapGet("/", () => {
+  return Results.Content($"Pongs: {CounterService.GetCounter()}");
+});
+
 app.MapGet("/pingpong", () => 
 {
   try
   {
-    StreamWriter sw = new StreamWriter("/usr/src/app/files/pong.txt");
-
-    CounterService.IncrementCounter();
-
-    sw.WriteLine($"Pongs: {CounterService.GetCounter()}");
-
-    sw.Close();
+    CounterService.IncrementCounter();  
+    // StreamWriter sw = new StreamWriter("/usr/src/app/files/pong.txt");
+    // sw.WriteLine($"Pongs: {CounterService.GetCounter()}");
+    // sw.Close();
   }
   catch(Exception e)
   {

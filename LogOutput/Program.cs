@@ -15,16 +15,21 @@ app.UseStaticFiles();
 string prevStamp = "";
 string prevPong = "";
 string prevOutput = "";
+HttpClient client = new HttpClient();
 
-app.MapGet("/", () => 
+app.MapGet("/", async () => 
 {
   try
   {
     StreamReader sr = new StreamReader("/usr/src/app/files/stamp.txt");
-    StreamReader sr2 = new StreamReader("/usr/src/app/files/pong.txt");
+    // StreamReader sr2 = new StreamReader("/usr/src/app/files/pong.txt");
   
     string? stamp = sr.ReadLine();
-    string? pong = sr2.ReadLine();
+
+    // string? pong = sr2.ReadLine();
+
+    var response = await client.GetAsync("http://pingpong-svc:2345/");
+    var pong = await response.Content.ReadAsStringAsync();
 
     // Only generate new Guid if data in text file has changed. 
     if(prevOutput is not null && stamp == prevStamp && pong == prevPong)
@@ -50,8 +55,8 @@ app.MapGet("/", () =>
   }
   catch (System.Exception e)
   {
-    Console.WriteLine("An error occurred" + e.Message);
-    return "File is empty or does not exist";
+    Console.WriteLine("An error occurred " + e.Message);
+    return $"An error occurred  + {e.Message}";
   }
 
 });
