@@ -5,16 +5,44 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogOutput", "LogOutput\LogOutput.csproj", "{5C48EA66-0E98-4568-8110-ADAE84DD79C9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7555}") = "LogTimeStamp", "LogTimeStamp\LogTimeStamp.csproj", "{5C48EA66-0E98-4568-8110-ADAE84DD79C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7553}") = "PingPongApp", "PingPongApp\PingPongApp.csproj", "{5C48EA66-0E98-4568-8110-ADAE84DD79C3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7552}") = "ToDo", "ToDo\ToDo.csproj", "{5C48EA66-0E98-4568-8110-ADAE84DD79C4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7551}") = "ToDo-Backend", "ToDo-Backend\ToDo-Backend.csproj", "{5C48EA66-0E98-4568-8110-ADAE84DD79C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5C48EA66-0E98-4568-8110-ADAE84DD79C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C48EA66-0E98-4568-8110-ADAE84DD79C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C48EA66-0E98-4568-8110-ADAE84DD79C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C48EA66-0E98-4568-8110-ADAE84DD79C9}.Release|Any CPU.Build.0 = Release|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C9}.Release|Any CPU.Build.0 = Release|Any CPU
+    
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C1}.Release|Any CPU.Build.0 = Release|Any CPU
+    
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C3}.Release|Any CPU.Build.0 = Release|Any CPU
+    
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C4}.Release|Any CPU.Build.0 = Release|Any CPU
+    
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {5C48EA66-0E98-4568-8110-ADAE84DD79C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
