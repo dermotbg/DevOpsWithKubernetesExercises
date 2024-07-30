@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var PORT = Environment.GetEnvironmentVariable("PORT") ?? "3001";
+var PORT = Environment.GetEnvironmentVariable("PORT") ?? "3000";
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

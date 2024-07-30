@@ -24,10 +24,10 @@ var app = builder.Build();
 
 app.UseStaticFiles();
 
-// app.UseStaticFiles(new StaticFileOptions
-// {
-//   FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "files")),
-// });
+app.UseStaticFiles(new StaticFileOptions
+{
+  FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "files")),
+});
 
 app.UseRouting();
 
