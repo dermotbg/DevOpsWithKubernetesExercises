@@ -14,8 +14,10 @@
   </h1>
   <img src="/image.png" width="200" height="200">
   <br>
-  <input type="text" placeholder="Enter your todo here" maxlength="140">
-  <button>Create TODO</button>
+  <form method="post">
+    <input type="text" name="todo" placeholder="Enter your todo here" maxlength="140">
+    <button>Create TODO</button>
+  </form>
   <p>Here all your to-do's will go</p>
   <ul>
       @foreach (var todo in Model.Todos)

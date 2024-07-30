@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 public class IndexModel : PageModel
@@ -11,10 +12,23 @@ public class IndexModel : PageModel
 
   public async Task OnGetAsync()
   {
-    var response = await _client.GetAsync("http://todo-backend-svc:2345/todos");
-    // var response = await _client.GetAsync("http://localhost:3001/todos");
+    // var response = await _client.GetAsync("http://todo-backend-svc:2345/todos");
+    var response = await _client.GetAsync("http://localhost:3001/todos");
     response.EnsureSuccessStatusCode();
     Todos = await response.Content.ReadFromJsonAsync<List<string>>();
-    Console.WriteLine(Todos);
+  }
+  public async Task<IActionResult> OnPostAsync(string todo)
+  {
+    if (String.IsNullOrWhiteSpace(todo))
+    {
+    Console.WriteLine($"Todo is empty");
+      return Page();
+    }
+    var stringContent = new StringContent(todo, System.Text.Encoding.UTF8, "text/plain");
+    // var response = await _client.PostAsync("http://todo-backend-svc:2345/todos", stringContent);
+    var response = await _client.PostAsync("http://localhost:3001/todos", stringContent);
+    response.EnsureSuccessStatusCode();
+    await OnGetAsync();
+    return RedirectToPage("./Index");
   }
 }

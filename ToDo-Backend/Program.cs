@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
+
 var builder = WebApplication.CreateBuilder(args);
 
-var PORT = Environment.GetEnvironmentVariable("PORT") ?? "3000";
+var PORT = Environment.GetEnvironmentVariable("PORT") ?? "3001";
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -16,8 +18,11 @@ app.MapGet("/todos", () =>
   return Results.Json(ToDoService.Get());
 });
 
-app.MapPost("/todos", (string newTodo) => 
+app.MapPost("/todos", async (HttpRequest request) => 
 {
+  using StreamReader reader = new StreamReader(request.Body, System.Text.Encoding.UTF8);
+  var newTodo = await reader.ReadToEndAsync();
+  
   if(newTodo is null)
   {
     throw new InvalidOperationException("New todo must have a value");
@@ -25,7 +30,7 @@ app.MapPost("/todos", (string newTodo) =>
 
   try
   {
-    ToDoService.Add(newTodo);
+    ToDoService.Add(newTodo.ToString());
   }
   catch (System.Exception e)
   {
@@ -47,7 +52,7 @@ app.Run();
 
 public static class ToDoService
 {
-  private static List<string>? _todos = new List<string>{};
+  private static List<string>? _todos = new List<string>{"This is the first todo"};
   public static  List<string> Get()
   {
     return _todos;
