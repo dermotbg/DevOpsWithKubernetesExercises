@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  namespace: todo-ns
   name: todo-pv
 spec:
   storageClassName: todo-pv
