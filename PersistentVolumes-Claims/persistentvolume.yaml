@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  namespace: logoutput-ns
   name: logoutput-pv
 spec:
   storageClassName: logoutput-pv
