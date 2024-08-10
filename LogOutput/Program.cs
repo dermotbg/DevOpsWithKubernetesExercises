@@ -23,18 +23,22 @@ app.MapGet("/", async () =>
   {
     StreamReader sr = new StreamReader("/usr/src/app/files/stamp.txt");
     // StreamReader sr2 = new StreamReader("/usr/src/app/files/pong.txt");
+    StreamReader sr3 = new StreamReader("/usr/src/app/config/information.txt");
   
     string? stamp = sr.ReadLine();
 
     // string? pong = sr2.ReadLine();
 
+    string? configMap = sr3.ReadLine();
+
     var response = await client.GetAsync("http://pingpong-svc:2345/");
     var pong = await response.Content.ReadAsStringAsync();
+    string configmapOutput = $"file content: {configMap}\nenv variable: MESSAGE={Environment.GetEnvironmentVariable("MESSAGE")}";
 
     // Only generate new Guid if data in text file has changed. 
     if(prevOutput is not null && stamp == prevStamp && pong == prevPong)
     {
-      return $"{prevOutput}";
+      return $"{configmapOutput}\n{prevOutput}";
     }
 
     if(stamp is null || pong is null)
@@ -51,7 +55,7 @@ app.MapGet("/", async () =>
     prevPong = pong;
     prevOutput = output;
     
-    return output;
+    return $"{configmapOutput}\n{output}";
   }
   catch (System.Exception e)
   {

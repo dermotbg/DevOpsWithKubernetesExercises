@@ -17,12 +17,26 @@ spec:
         - name: shared-files
           persistentVolumeClaim:
             claimName: logoutput-claim
+        - name: logoutput-configmap-volume
+          configMap:
+            name: logoutput-configmap
+            items:
+              - key: information.txt
+                path: information.txt
       containers:
         - name: logoutput
-          image: dermotbg/logoutput:v7.5.2
+          image: dermotbg/logoutput:v7.5.9
           volumeMounts:
           - name: shared-files
             mountPath: /usr/src/app/files
+          - name: logoutput-configmap-volume
+            mountPath: /usr/src/app/config
+          env:
+          - name: MESSAGE
+            valueFrom:
+              configMapKeyRef:
+                name: logoutput-configmap
+                key: MESSAGE
         - name: logtimestamp
           image: dermotbg/logtimestamp:v5
           volumeMounts:
