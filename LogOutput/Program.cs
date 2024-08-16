@@ -32,7 +32,7 @@ app.MapGet("/", async () =>
     string? configMap = sr3.ReadLine();
 
     var response = await client.GetAsync("http://pingpong-svc:2345/");
-    var pong = await response.Content.ReadAsStringAsync();
+    string pong = await response.Content.ReadAsStringAsync();
     string configmapOutput = $"file content: {configMap}\nenv variable: MESSAGE={Environment.GetEnvironmentVariable("MESSAGE")}";
 
     // Only generate new Guid if data in text file has changed. 

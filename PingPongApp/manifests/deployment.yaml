@@ -19,7 +19,7 @@ spec:
       #       claimName: logoutput-claim
       containers:
         - name: pingpong
-          image: dermotbg/ping-pong:v7.2
+          image: dermotbg/ping-pong:v7.5.4
           # volumeMounts:
           # - name: shared-files
           #   mountPath: /usr/src/app/files
