@@ -40,14 +40,14 @@ app.Run();
 public static class CounterService
 {
   private static int _counter;
+  private static Boolean _needsInit = true;
   private static string _connectionString = "Host=postgres-svc;Port=5432;Username=ps_user;Password=SecurePassword;Database=ps_db";
   // private static string _connectionString = "postgres://ps_user:SecurePassword@postgres-svc:5432/ps_db";
-  public async static Task<int> GetCounterAsync()
+
+  public static async Task<Boolean> InitAsync()
   {
-    Console.WriteLine("CONNECTION ATTEMPT:");
     await using var dataSource = NpgsqlDataSource.Create(_connectionString);
 
-    // DEBUG: Create table if set re-applied
     await using (var initTableCmd = dataSource.CreateCommand(
     "CREATE TABLE IF NOT EXISTS pingpong (" +
     "id SERIAL PRIMARY KEY, " +
@@ -58,6 +58,16 @@ public static class CounterService
     {
         await initTableCmd.ExecuteNonQueryAsync();
     }
+      return _needsInit = false;
+  }
+  public async static Task<int> GetCounterAsync()
+  {
+    if(_needsInit)
+    {
+      await InitAsync();
+    }
+    
+    await using var dataSource = NpgsqlDataSource.Create(_connectionString);
     
     await using (var cmd = dataSource.CreateCommand("SELECT count FROM pingpong WHERE endpoint = 'pingpong';"))
     
