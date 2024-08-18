@@ -12,10 +12,18 @@ public class IndexModel : PageModel
 
   public async Task OnGetAsync()
   {
-    var response = await _client.GetAsync("http://todo-backend-svc:2345/todos");
+    try
+    {
+      var response = await _client.GetAsync("http://todo-backend-svc:2345/todos");
+      response.EnsureSuccessStatusCode();
+      Todos = await response.Content.ReadFromJsonAsync<List<string>>();
+    }
+    catch (System.Exception e)
+    {
+      Console.WriteLine("An error has occurred:" + e.Message);
+      throw;
+    }
     // var response = await _client.GetAsync("http://localhost:3001/todos");
-    response.EnsureSuccessStatusCode();
-    Todos = await response.Content.ReadFromJsonAsync<List<string>>();
   }
   public async Task<IActionResult> OnPostAsync(string todo)
   {

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +13,11 @@ Console.WriteLine($"Server running on PORT: {PORT}");
 
 var app = builder.Build();
 
-app.MapGet("/todos", () => 
+// ENDPOINTS
+app.MapGet("/todos", async () => 
 {
-  return Results.Json(ToDoService.Get());
+  var todos = await ToDoService.GetAsync();
+  return Results.Json(todos);
 });
 
 app.MapPost("/todos", async (HttpRequest request) => 
@@ -30,7 +32,7 @@ app.MapPost("/todos", async (HttpRequest request) =>
 
   try
   {
-    ToDoService.Add(newTodo.ToString());
+    await ToDoService.AddAsync(newTodo.ToString());
   }
   catch (System.Exception e)
   {
@@ -52,14 +54,67 @@ app.Run();
 
 public static class ToDoService
 {
-  private static List<string>? _todos = new List<string>{"This is the first todo"};
-  public static  List<string> Get()
+  private static string _connectionString = "Host=todo-postgres-svc;Port=5432;Username=ps_user;Password=SecurePassword;Database=ps_db";
+  // postgres://ps_user:SecurePassword@todo-postgres-svc:5432/ps_db
+  private static List<string>? _todos = new List<string>{};
+  private static Boolean _needsInit = true;
+
+  public static async Task<Boolean> InitAsync()
   {
-    return _todos;
+    await using var dataSource = NpgsqlDataSource.Create(_connectionString);
+      // init DB if needed
+      Console.WriteLine("DB INIT STARTED");
+      await using (var initTableCmd = dataSource.CreateCommand(
+      "CREATE TABLE IF NOT EXISTS todos (" +
+      "id SERIAL PRIMARY KEY, " +
+      "todo TEXT" +
+      "); "))
+      {
+          await initTableCmd.ExecuteNonQueryAsync();
+          Console.WriteLine("INIT COMPLETE");
+      }
+      return _needsInit = false;
   }
-  public static List<string> Add(string newTodo)
+  
+  public static async Task<List<string>> GetAsync()
   {
-    _todos.Add(newTodo);
-    return _todos;
+    await using var dataSource = NpgsqlDataSource.Create(_connectionString);
+    
+    if(_needsInit)
+    {
+      await InitAsync();
+    }
+
+    List<string> todoList = new List<string>{};
+    await using (var cmd = dataSource.CreateCommand("SELECT todo FROM todos;"))
+    
+    await using (var reader = await cmd.ExecuteReaderAsync())
+    {
+      while (await reader.ReadAsync())
+      {
+        Console.WriteLine("Adding to new List");
+        todoList.Add(reader.GetString(0));
+      }
+    }
+
+    _todos = todoList;
+    return todoList;
+  }
+  public static async Task<IResult> AddAsync(string newTodo)
+  {
+    if(String.IsNullOrEmpty(newTodo))
+    {
+      return Results.BadRequest("Todo cannot be empty");
+    }
+    await using var dataSource = NpgsqlDataSource.Create(_connectionString);
+    await using (var cmd = dataSource.CreateCommand($"INSERT INTO todos (todo) VALUES ('{newTodo}');"))
+    {
+      await cmd.ExecuteNonQueryAsync();
+      _todos?.Add(newTodo);
+    }
+    
+    await GetAsync();
+
+    return Results.Ok(_todos);
   }
 }
