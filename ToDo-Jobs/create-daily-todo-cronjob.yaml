@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dailytodo
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: dailytodo
+            image: curlimages/curl:latest
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                set -e; \
+                URL=$(curl -X HEAD -i https://en.wikipedia.org/wiki/Special:Random | grep 'location' | cut -d' ' -f2); \
+                curl -H 'Content-Type: text/plain' \
+                -d "Read: $URL" \
+                -X POST \
+                http://todo-backend-svc:2345/todos 
+          restartPolicy: OnFailure
