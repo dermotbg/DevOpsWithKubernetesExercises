@@ -29,8 +29,8 @@ public class IndexModel : PageModel
   {
     if (String.IsNullOrWhiteSpace(todo))
     {
-    Console.WriteLine($"Todo is empty");
-      return Page();
+      Console.WriteLine($"An error has occurred: Todo is empty");
+      return RedirectToPage("./Index");
     }
     var stringContent = new StringContent(todo, System.Text.Encoding.UTF8, "text/plain");
     var response = await _client.PostAsync("http://todo-backend-svc:2345/todos", stringContent);

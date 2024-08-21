@@ -63,7 +63,7 @@ public static class ToDoService
   {
     await using var dataSource = NpgsqlDataSource.Create(_connectionString);
       // init DB if needed
-      Console.WriteLine("DB INIT STARTED");
+      Console.WriteLine("Database Initialization needed: INIT STARTED");
       await using (var initTableCmd = dataSource.CreateCommand(
       "CREATE TABLE IF NOT EXISTS todos (" +
       "id SERIAL PRIMARY KEY, " +
@@ -92,7 +92,6 @@ public static class ToDoService
     {
       while (await reader.ReadAsync())
       {
-        Console.WriteLine("Adding to new List");
         todoList.Add(reader.GetString(0));
       }
     }
@@ -104,12 +103,22 @@ public static class ToDoService
   {
     if(String.IsNullOrEmpty(newTodo))
     {
-      return Results.BadRequest("Todo cannot be empty");
+      Console.WriteLine("Todo Rejected: String is empty");
+      return Results.BadRequest("Todo cannot be empty!");
     }
+
+    if(newTodo.Length > 140)
+    {
+      Console.WriteLine("Todo Rejected: String is over 140 chars");
+      return Results.BadRequest("Todo must be under 140 characters.");
+    }
+
     await using var dataSource = NpgsqlDataSource.Create(_connectionString);
+    
     await using (var cmd = dataSource.CreateCommand($"INSERT INTO todos (todo) VALUES ('{newTodo}');"))
     {
       await cmd.ExecuteNonQueryAsync();
+      Console.WriteLine("Todo Accepted:" + newTodo);
       _todos?.Add(newTodo);
     }
     
