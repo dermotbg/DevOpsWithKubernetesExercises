@@ -4,7 +4,7 @@ metadata:
   namespace: logoutput-ns
   name: logoutput-pv
 spec:
-  storageClassName: logoutput-pv
+  # storageClassName: logoutput-pv
   capacity:
     storage: 1Gi
   volumeMode: Filesystem
