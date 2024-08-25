@@ -31,19 +31,19 @@ app.MapGet("/", async () =>
 
     string? configMap = sr3.ReadLine();
 
-    var response = await client.GetAsync("http://pingpong-svc:2345/");
+    var response = await client.GetAsync("http://pingpong-svc:80/");
     string pong = await response.Content.ReadAsStringAsync();
     string configmapOutput = $"file content: {configMap}\nenv variable: MESSAGE={Environment.GetEnvironmentVariable("MESSAGE")}";
 
     // Only generate new Guid if data in text file has changed. 
     if(prevOutput is not null && stamp == prevStamp && pong == prevPong)
     {
-      return $"{configmapOutput}\n{prevOutput}";
+      return Results.Content($"{configmapOutput}\n{prevOutput}");
     }
 
     if(stamp is null || pong is null)
     {
-      return "Generating data...";
+      return Results.Content("Generating data...");
     }
 
     Console.WriteLine(stamp);
@@ -55,12 +55,12 @@ app.MapGet("/", async () =>
     prevPong = pong;
     prevOutput = output;
     
-    return $"{configmapOutput}\n{output}";
+    return Results.Content($"{configmapOutput}\n{output}");
   }
   catch (System.Exception e)
   {
     Console.WriteLine("An error occurred " + e.Message);
-    return $"An error occurred  + {e.Message}";
+    throw new NotImplementedException($"An error occurred  + {e.Message}");
   }
 
 });

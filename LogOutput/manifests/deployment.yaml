@@ -25,7 +25,7 @@ spec:
                 path: information.txt
       containers:
         - name: logoutput
-          image: dermotbg/logoutput:v7.6.0
+          image: dermotbg/logoutput:v7.6.2
           volumeMounts:
           - name: shared-files
             mountPath: /usr/src/app/files
