@@ -63,7 +63,7 @@ jobs:
           cd ../ToDo-Backend/
           kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGEBE:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f - -n todo-ns
-          kubectl get deployments - todo-ns
+          kubectl get all --all-namespaces
           kubectl rollout status deployment $SERVICEFE -n todo-ns
           kubectl rollout status deployment $SERVICEBE -n todo-ns
           kubectl get services -o wide
