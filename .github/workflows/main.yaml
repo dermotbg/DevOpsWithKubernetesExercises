@@ -9,8 +9,8 @@ env:
   GKE_ZONE: europe-west12-a
   IMAGEFE: todo
   IMAGEBE: todo-backend
-  SERVICE-FRONTEND: todo
-  SERVICE-BACKEND: todo-backend
+  SERVICEFE: todo
+  SERVICEBE: todo-backend
   BRANCH: ${{ github.ref_name }}
 
 jobs:
@@ -63,6 +63,6 @@ jobs:
           cd ../ToDo-Backend/
           kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGEBE:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment $SERVICE-FRONTEND
-          kubectl rollout status deployment $SERVICE-BACKEND
+          kubectl rollout status deployment $SERVICEFE
+          kubectl rollout status deployment $SERVICEBE
           kubectl get services -o wide
