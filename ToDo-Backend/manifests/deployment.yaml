@@ -15,4 +15,4 @@ spec:
     spec:
       containers:
         - name: todo-backend
-          image: dermotbg/todo-backend:v0.4
+          image: PROJECT/IMAGE
