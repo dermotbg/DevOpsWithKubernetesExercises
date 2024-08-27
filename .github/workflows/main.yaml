@@ -7,8 +7,10 @@ env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: dermotbg-cluster
   GKE_ZONE: europe-west12-a
-  IMAGE: dermotbg-environments
-  SERVICE: dermotbg-environments
+  IMAGE-FRONTEND: todo
+  IMAGE-BACKEND: todo-backend
+  SERVICE-FRONTEND: todo
+  SERVICE-BACKEND: todo-backend
   BRANCH: ${{ github.ref_name }}
 
 jobs:
@@ -39,16 +41,16 @@ jobs:
             location: '${{ env.GKE_ZONE }}'
 
       - name: Build Frontend
-        run: docker build --tag "gcr.io/$PROJECT_ID/$IMAGE-frontend:$BRANCH-$GITHUB_SHA" ./ToDo
+        run: docker build --tag "gcr.io/$PROJECT_ID/$IMAGE-FRONTEND:$BRANCH-$GITHUB_SHA" ./ToDo
 
       - name: Publish Frontend
-        run: docker push "gcr.io/$PROJECT_ID/$IMAGE-frontend:$BRANCH-$GITHUB_SHA"
+        run: docker push "gcr.io/$PROJECT_ID/$IMAGE-FRONTEND:$BRANCH-$GITHUB_SHA"
 
       - name: Build Backend
-        run: docker build --tag "gcr.io/$PROJECT_ID/$IMAGE-backend:$BRANCH-$GITHUB_SHA" ./ToDo-Backend
+        run: docker build --tag "gcr.io/$PROJECT_ID/$IMAGE-BACKEND:$BRANCH-$GITHUB_SHA" ./ToDo-Backend
 
       - name: Publish Backend
-        run: docker push "gcr.io/$PROJECT_ID/$IMAGE-backend:$BRANCH-$GITHUB_SHA"
+        run: docker push "gcr.io/$PROJECT_ID/$IMAGE-BACKEND:$BRANCH-$GITHUB_SHA"
 
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
@@ -56,10 +58,11 @@ jobs:
       - name: Deploy
         run: |-
           cd ToDo/
-          kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGE-frontend:$BRANCH-$GITHUB_SHA
+          kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGE-FRONTEND:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
           cd ../ToDo-Backend/
-          kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGE-backend:$BRANCH-$GITHUB_SHA
+          kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGE-BACKEND:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment $SERVICE
+          kubectl rollout status deployment $SERVICE-FRONTEND
+          kubectl rollout status deployment $SERVICE-BACKEND
           kubectl get services -o wide
