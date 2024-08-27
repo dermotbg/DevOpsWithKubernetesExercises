@@ -57,14 +57,13 @@ jobs:
 
       - name: Deploy
         run: |-
-          kubectl config view --minify --output 'jsonpath={..namespace}'
           cd ToDo/
           kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGEFE:$BRANCH-$GITHUB_SHA
-          kustomize build . | kubectl apply -f -
+          kustomize build . | kubectl apply -f - -n todo-ns
           cd ../ToDo-Backend/
           kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGEBE:$BRANCH-$GITHUB_SHA
-          kustomize build . | kubectl apply -f -
-          kubectl get deployments
+          kustomize build . | kubectl apply -f - -n todo-ns
+          kubectl get deployments - todo-ns
           kubectl rollout status deployment $SERVICEFE -n todo-ns
           kubectl rollout status deployment $SERVICEBE -n todo-ns
           kubectl get services -o wide
