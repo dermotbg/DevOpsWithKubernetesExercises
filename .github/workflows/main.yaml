@@ -57,6 +57,7 @@ jobs:
 
       - name: Deploy
         run: |-
+          kubectl config view --minify --output 'jsonpath={..namespace}'
           cd ToDo/
           kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGEFE:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
