@@ -62,8 +62,8 @@ spec:
     - metadata:
         name: todo-postgres-data-storage
       spec: 
-        accessModes: ["ReadWriteOnce"]
-        storageClassName: local-path
+        accessModes: ["ReadWriteMany"]
+        # storageClassName: local-path
         resources:
           requests:
             storage: 100Mi 
