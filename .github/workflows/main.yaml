@@ -12,6 +12,7 @@ env:
   SERVICEFE: todo-dep
   SERVICEBE: todo-backend-dep
   BRANCH: ${{ github.ref_name }}
+  NAMESPACE: ${{ github.ref == 'refs/heads/main' && 'default' || github.ref_name }}
 
 jobs:
   build-publish-deploy:
@@ -59,41 +60,33 @@ jobs:
         run: |-
           cd ToDo-Backend/
 
-          echo ${GITHUB_REF#refs/heads/}
+          echo ${{env.NAMESPACE}}
           
-          kubectl create namespace ${GITHUB_REF#refs/heads/} || true
-          kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
-          if [ "${GITHUB_REF#refs/heads/}" == "main" ]; then
-            kustomize edit set namespace default
-          else 
-            kustomize edit set namespace "${GITHUB_REF#refs/heads/}"
-          fi
+          kubectl create namespace ${{env.NAMESPACE}} || true
+          kubectl config set-context --current --namespace=${{env.NAMESPACE}}
+          kustomize edit set namespace "${{env.NAMESPACE}}"
           kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGEBE:$BRANCH-$GITHUB_SHA
-          kustomize build . | kubectl apply -f -
+          kustomize build . | kubectl apply -f - --namespace ${{env.NAMESPACE}}
 
           kubectl get all
 
-          kubectl rollout status deployment $SERVICEBE
+          kubectl rollout status deployment $SERVICEBE --namespace ${{env.NAMESPACE}}
           kubectl get services -o wide
 
       - name: Deploy Frontend
         run: |-
           cd ToDo/
 
-          echo ${GITHUB_REF#refs/heads/}
+          echo ${{env.NAMESPACE}}
           
-          kubectl create namespace ${GITHUB_REF#refs/heads/} || true
-          kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
-          if [ "${GITHUB_REF#refs/heads/}" == "main" ]; then
-            kustomize edit set namespace default
-          else 
-            kustomize edit set namespace "${GITHUB_REF#refs/heads/}"
-          fi
+          kubectl create namespace ${{env.NAMESPACE}} || true
+          kubectl config set-context --current --namespace=${{env.NAMESPACE}}
+          kustomize edit set namespace "${{env.NAMESPACE}}"
 
           kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGEFE:$BRANCH-$GITHUB_SHA
-          kustomize build . | kubectl apply -f -
+          kustomize build . | kubectl apply -f - --namespace ${{env.NAMESPACE}}
 
           kubectl get all
 
-          kubectl rollout status deployment $SERVICEFE
+          kubectl rollout status deployment $SERVICEFE --namespace ${{env.NAMESPACE}}
           kubectl get services -o wide
