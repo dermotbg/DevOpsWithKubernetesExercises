@@ -5,6 +5,7 @@ resources:
   - manifests/service.yaml
   - manifests/ingress.yaml
   - manifests/todo-postgres-statefulset.yaml
+  - manifests/pvc-gke.yaml
 images:
   - name: PROJECT/IMAGE
-    newName: dermotbg/todo-backend:v0.5
+    newName: dermotbg/todo-backend:v0.5.1

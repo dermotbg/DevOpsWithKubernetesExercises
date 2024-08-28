@@ -55,19 +55,18 @@ jobs:
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
 
+      - name: Deploy Backend
+        run: |-
+          cd ToDo-Backend/
+          kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGEBE:$BRANCH-$GITHUB_SHA
+          kustomize build . | kubectl apply -f - --namespace todo-ns
+          kubectl rollout status deployment $SERVICEBE --namespace todo-ns
+          kubectl get services -o wide
+
       - name: Deploy Frontend
         run: |-
-          cd ToDo/
+          cd ../ToDo/
           kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGEFE:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f - --namespace todo-ns
           kubectl rollout status deployment $SERVICEFE --namespace todo-ns
-          kubectl get services -o wide
-
-      - name: Deploy Backend
-        run: |-
-          cd ../ToDo-Backend/
-          kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGEBE:$BRANCH-$GITHUB_SHA
-          kustomize build . | kubectl apply -f - --namespace todo-ns
-          
-          kubectl rollout status deployment $SERVICEBE --namespace todo-ns
           kubectl get services -o wide

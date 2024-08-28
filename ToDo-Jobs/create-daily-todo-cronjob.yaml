@@ -19,5 +19,5 @@ spec:
                 curl -H 'Content-Type: text/plain' \
                 -d "Read: $URL" \
                 -X POST \
-                http://todo-backend-svc:80/todos 
+                http://todo-backend-svc:2345/todos 
           restartPolicy: OnFailure

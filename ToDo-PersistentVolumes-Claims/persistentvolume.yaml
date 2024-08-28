@@ -16,9 +16,7 @@ spec:
     required:
       nodeSelectorTerms:
         - matchExpressions:
-            # - key: kubernetes.io/hostname
-            - key: topology.kubernetes.io/zone
+            - key: kubernetes.io/hostname
               operator: In
               values:
-              # - k3d-k3s-default-agent-0
-              - europe-west12-a
+              - k3d-k3s-default-agent-0
