@@ -65,7 +65,7 @@ jobs:
 
       - name: Deploy Frontend
         run: |-
-          cd ../ToDo/
+          cd ToDo/
           kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGEFE:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f - --namespace todo-ns
           kubectl rollout status deployment $SERVICEFE --namespace todo-ns
