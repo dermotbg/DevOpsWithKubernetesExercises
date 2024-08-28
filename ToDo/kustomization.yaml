@@ -6,4 +6,4 @@ resources:
   - manifests/ingress.yaml
 images:
   - name: PROJECT/IMAGE
-    newName: dermotbg/todo:v3.8.7
+    newName: dermotbg/todo:v3.8.8

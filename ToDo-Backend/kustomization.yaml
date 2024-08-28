@@ -7,4 +7,4 @@ resources:
   - manifests/todo-postgres-statefulset.yaml
 images:
   - name: PROJECT/IMAGE
-    newName: dermotbg/todo-backend:v0.4
+    newName: dermotbg/todo-backend:v0.5

@@ -9,7 +9,7 @@ spec:
     storage: 1Gi
   volumeMode: Filesystem
   accessModes:
-  - ReadWriteMany
+  - ReadWriteOnce
   local:
     path: /tmp/todo
   nodeAffinity:
