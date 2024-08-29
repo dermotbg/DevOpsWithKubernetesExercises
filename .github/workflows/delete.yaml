@@ -8,6 +8,9 @@ jobs:
     name: Cleanup Branch Environment 
     runs-on: ububtu-latest
     steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+          
         - name: Delete Namespace
           run: |-
             echo "${{ github.event.ref }}"
