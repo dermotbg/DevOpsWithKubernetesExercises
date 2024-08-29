@@ -11,8 +11,10 @@ jobs:
     name: Echo Test
     steps:
       - uses: actions/checkout@v4
-      - name: Echo branch
+      - name: Echo branch -> test kubectl 
         run: |-
           echo "Event.Ref: ${{ github.event.ref }}"
           echo "Event.Ref_Type: ${{ github.event.ref_type }}"
-  
+          echo "branch name: ${GITHUB_REF#refs/heads/}"
+          kubectl create namespace ${GITHUB_REF#refs/heads/} || true
+          
