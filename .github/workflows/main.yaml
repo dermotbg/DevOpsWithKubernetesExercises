@@ -68,8 +68,6 @@ jobs:
           kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGEBE:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f - --namespace ${{env.NAMESPACE}}
 
-          kubectl get all
-
           kubectl rollout status deployment $SERVICEBE --namespace ${{env.NAMESPACE}}
           kubectl get services -o wide
 
@@ -85,8 +83,6 @@ jobs:
 
           kustomize edit set image PROJECT/IMAGE=gcr.io/$PROJECT_ID/$IMAGEFE:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f - --namespace ${{env.NAMESPACE}}
-
-          kubectl get all
 
           kubectl rollout status deployment $SERVICEFE --namespace ${{env.NAMESPACE}}
           kubectl get services -o wide

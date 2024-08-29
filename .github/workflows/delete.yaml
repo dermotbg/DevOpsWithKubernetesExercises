@@ -1,0 +1,15 @@
+name: Cleanup Branch
+
+on:
+  delete:
+
+jobs:
+  delete:
+    name: Cleanup Branch Environment 
+    runs-on: ububtu-latest
+    steps:
+        - name: Delete Namespace
+          run: |-
+            echo "${{ github.event.ref }}"
+            echo "${{ github.event.ref_type }}"
+  
