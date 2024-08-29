@@ -5,14 +5,13 @@ on:
 
 jobs:
   delete:
-    name: Cleanup Branch Environment 
+    if: github.event.ref_type == 'branch'
     runs-on: ububtu-latest
+    name: Echo Test
     steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-          
-        - name: Delete Namespace
-          run: |-
-            echo "${{ github.event.ref }}"
-            echo "${{ github.event.ref_type }}"
+      - uses: actions/checkout@v4
+      - name: Echo branch
+        run: |-
+          echo "Event.Ref: ${{ github.event.ref }}"
+          echo "Event.Ref_Type: ${{ github.event.ref_type }}"
   
