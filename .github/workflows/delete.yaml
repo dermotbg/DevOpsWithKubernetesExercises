@@ -3,18 +3,42 @@ name: Cleanup Branch
 on:
   delete:
 
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: dermotbg-cluster
+  GKE_ZONE: europe-west12-a
+
 jobs:
   delete:
     if: github.event.ref_type == 'branch'
     runs-on: ubuntu-latest
 
-    name: Echo Test
+    name: Cleanup Environment
     steps:
       - uses: actions/checkout@v4
-      - name: Echo branch -> test kubectl 
+
+      - name: 'Set up Cloud SDK'
+        uses: google-github-actions/setup-gcloud@v2
+    
+      - name: 'Use gcloud CLI'
+        run: gcloud info
+
+      - run: gcloud --quiet auth configure-docker
+
+      - name: 'Get GKE credentials'
+        uses: 'google-github-actions/get-gke-credentials@v2'
+        with:
+            cluster_name: '${{ env.GKE_CLUSTER }}'
+            project_id: '${{ env.PROJECT_ID }}'
+            location: '${{ env.GKE_ZONE }}'
+
+      - name: 'Cleanup Resources in Namespace'
         run: |-
-          echo "Event.Ref: ${{ github.event.ref }}"
-          echo "Event.Ref_Type: ${{ github.event.ref_type }}"
-          echo "branch name: ${GITHUB_REF#refs/heads/}"
-          kubectl create namespace ${GITHUB_REF#refs/heads/} || true
+          echo "Branch Name: ${{ github.event.ref }}"
+          kubectl delete all -n ${{ github.event.ref }}
+
+
+      - name: 'Cleanup Namespace'
+        run: |-
+          kubectl delete namespace ${{ github.event.ref }} || true
           
