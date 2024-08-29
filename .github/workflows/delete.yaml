@@ -6,7 +6,8 @@ on:
 jobs:
   delete:
     if: github.event.ref_type == 'branch'
-    runs-on: ububtu-latest
+    runs-on: ubuntu-latest
+
     name: Echo Test
     steps:
       - uses: actions/checkout@v4
