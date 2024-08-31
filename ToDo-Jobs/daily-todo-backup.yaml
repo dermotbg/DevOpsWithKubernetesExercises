@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: backup-sa
+  namespace: default 
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: backup-role
+  namespace: default
+rules:
+- apiGroups: [""]
+  resources: [pods, pods/exec, secrets]
+  verbs: [get, watch, list, create]
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: backup-sa-binding
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: backup-sa
+  namespace: default
+roleRef:
+  kind: Role
+  name: backup-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dailytodobackup
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: backup-sa
+          containers:
+          - name: dailytodobackup
+            image: google/cloud-sdk:latest
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                set -e; \
+
+                GKE_SA_KEY=$(kubectl get secret gke-cred --template={{.data.GKE_SA_KEY}} | base64 --decode) \
+                GKE_PROJECT=$(kubectl get secret gke-cred --template={{.data.GKE_PROJECT}} | base64 --decode) \
+
+                printf '%s' "$GKE_SA_KEY" > /tmp/gke-pk.json
+
+                gcloud auth activate-service-account --key-file=/tmp/gke-pk.json --project=$GKE_PROJECT \
+
+                kubectl exec postgres-stset-0 -- bash -c "pg_dump -U ps_user ps_db" > /tmp/backup.sql \
+
+                curl -X POST --data-binary @/tmp/backup.sql \
+                -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+                -H "Content-type: text/plain" \
+                "https://storage.googleapis.com/upload/storage/v1/b/dermotbg-todo-backup/o?uploadType=media&name=backup-$(date -I)"
+
+                rm /tmp/backup.sql /tmp/gke-pk.json
+          restartPolicy: OnFailure
