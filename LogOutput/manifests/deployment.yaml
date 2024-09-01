@@ -26,6 +26,13 @@ spec:
       containers:
         - name: logoutput
           image: dermotbg/logoutput:v7.6.2
+          resources:
+            requests:
+              cpu: "150m"
+              memory: "256Mi"
+            limits:
+              cpu: "750m"
+              memory: "512Mi"
           volumeMounts:
           - name: shared-files
             mountPath: /usr/src/app/files
@@ -39,6 +46,13 @@ spec:
                 key: MESSAGE
         - name: logtimestamp
           image: dermotbg/logtimestamp:v5
+          resources:
+            requests:
+              cpu: "150m"
+              memory: "256Mi"
+            limits:
+              cpu: "750m"
+              memory: "512Mi"
           volumeMounts:
           - name: shared-files
             mountPath: /usr/src/app/files

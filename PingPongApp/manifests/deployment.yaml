@@ -20,6 +20,13 @@ spec:
       containers:
         - name: pingpong
           image: dermotbg/ping-pong:v7.5.5
+          resources:
+            requests:
+              cpu: "150m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
           # volumeMounts:
           # - name: shared-files
           #   mountPath: /usr/src/app/files
