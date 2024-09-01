@@ -20,6 +20,13 @@ spec:
       containers:
         - name: todo
           image: PROJECT/IMAGE
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
           env:
             - name: PORT
               value: "3000" 
@@ -28,6 +35,13 @@ spec:
             mountPath: /usr/src/app/files
         - name: todo-image-source
           image: dermotbg/todo-image-source:v0.4
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
           volumeMounts:
           - name: todo-files
             mountPath: /usr/src/app/files

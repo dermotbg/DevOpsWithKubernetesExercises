@@ -6,6 +6,7 @@ resources:
   - manifests/ingress.yaml
   - manifests/todo-postgres-statefulset.yaml
   - manifests/pvc-gke.yaml
+  - manifests/autoscaler.yaml
 images:
   - name: PROJECT/IMAGE
     newName: dermotbg/todo-backend:v0.5.1

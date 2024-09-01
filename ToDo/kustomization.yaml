@@ -4,6 +4,7 @@ resources:
   - manifests/deployment.yaml
   - manifests/service.yaml
   - manifests/ingress.yaml
+  - manifests/autoscaler.yaml
 images:
   - name: PROJECT/IMAGE
     newName: dermotbg/todo:v3.8.9
