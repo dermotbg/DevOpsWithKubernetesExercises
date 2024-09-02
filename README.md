@@ -21,3 +21,9 @@ DIY Cons:
 ### Thoughts:
   Even though previous to this exercise I had already moved it to a DIY instance to fix a deployment issue, the scope of the project is much too small for a fully managed database service. 
   On a larger scale, I would still be reluctant to use fully managed services, as as they scale they become very expensive, and to be locked into such a cost  while you're business starts to grow could be detrimental.
+
+
+
+## Exercise 3.10 Logging
+
+![image](https://github.com/user-attachments/assets/239ecdc7-b019-4cea-b3a6-2c6c8b4ea8c5)
