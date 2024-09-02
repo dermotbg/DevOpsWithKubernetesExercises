@@ -16,6 +16,27 @@ spec:
       containers:
         - name: todo-backend
           image: PROJECT/IMAGE
+          # Startup Probe checks its own endpoint for a response to confirm it's started, blocking other probes until complete. 
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            failureThreshold: 30
+            periodSeconds: 10
+          # Live Probe checks its own endpoint for a response to confirm it's still running after startup
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            failureThreshold: 1
+            periodSeconds: 10
+          #  readiness Probe checks its own endpoint (which in this case calls the db) for a response to confirm it's ready to accept connections. 
+          readinessProbe:
+            httpGet:
+              path: /dbhealth
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 5
           resources:
             requests:
               cpu: "150m"

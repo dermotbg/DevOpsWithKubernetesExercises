@@ -4,7 +4,7 @@ metadata:
   # namespace: todo-ns
   name: todo-svc
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: todo
   ports:

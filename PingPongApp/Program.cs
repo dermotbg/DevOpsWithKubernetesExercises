@@ -20,6 +20,7 @@ app.MapGet("/", async () => {
 app.MapGet("/healthz", () => {
   return Results.Ok();
 });
+
 app.MapGet("/dbhealth", async () => {
   try
     {  

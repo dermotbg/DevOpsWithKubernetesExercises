@@ -33,4 +33,24 @@ app.UseRouting();
 
 app.MapRazorPages();
 
+HttpClient client = new HttpClient();
+
+app.MapGet("/healthz", () => {
+  return Results.Ok();
+});
+
+app.MapGet("/backend-health", async () => {
+  try
+  {
+    var response = await client.GetAsync("http://todo-backend-svc:2345/healthz");
+    response.EnsureSuccessStatusCode();
+    return Results.Ok();
+  }
+  catch (Exception e)
+  {
+    Console.WriteLine($"Connection to backend failed: {e.Message}");
+    return Results.StatusCode(500);
+  }
+});
+
 app.Run();

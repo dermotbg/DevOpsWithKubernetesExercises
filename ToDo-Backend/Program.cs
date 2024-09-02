@@ -14,6 +14,27 @@ Console.WriteLine($"Server running on PORT: {PORT}");
 var app = builder.Build();
 
 // ENDPOINTS
+app.MapGet("/healthz", () => {
+  return Results.Ok();
+});
+
+app.MapGet("/dbhealth", async () => {
+  try
+    {  
+      await using var dataSource = NpgsqlDataSource.Create("Host=todo-postgres-svc;Port=5432;Username=ps_user;Password=SecurePassword;Database=ps_db");
+      await using (var healthCheckCmd = dataSource.CreateCommand("SELECT 1"))
+      {
+            await healthCheckCmd.ExecuteNonQueryAsync();
+      }
+      return Results.Ok();
+    }
+    catch (Exception e)
+    {
+      Console.WriteLine($"Database connection failed: {e.Message}");
+      return Results.StatusCode(500);
+    }
+});
+
 app.MapGet("/todos", async () => 
 {
   var todos = await ToDoService.GetAsync();
