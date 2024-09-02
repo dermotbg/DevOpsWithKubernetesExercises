@@ -17,6 +17,20 @@ string prevPong = "";
 string prevOutput = "";
 HttpClient client = new HttpClient();
 
+app.MapGet("/healthz", async () => {
+  try
+  {
+    var response = await client.GetAsync("http://pingpong-svc:80/healthz");
+    response.EnsureSuccessStatusCode();
+    return Results.Ok();
+  }
+  catch (Exception e)
+  {
+    Console.WriteLine($"Connection to PingPongApp failed: {e.Message}");
+    return Results.StatusCode(500);
+  }
+});
+
 app.MapGet("/", async () => 
 {
   try

@@ -4,7 +4,7 @@ metadata:
   namespace: logoutput-ns
   name: pingpong-dep
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: pingpong
@@ -19,7 +19,13 @@ spec:
       #       claimName: logoutput-claim
       containers:
         - name: pingpong
-          image: dermotbg/ping-pong:v7.5.5
+          image: dermotbg/ping-pong:v7.6.3
+          readinessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            httpGet:
+              path: /dbhealth
+              port: 3000
           resources:
             requests:
               cpu: "150m"

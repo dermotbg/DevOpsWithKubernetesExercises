@@ -4,6 +4,7 @@ metadata:
   namespace: logoutput-ns
   name: logoutput-ingress
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
