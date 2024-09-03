@@ -27,3 +27,7 @@ DIY Cons:
 ## Exercise 3.10 Logging
 
 ![image](https://github.com/user-attachments/assets/239ecdc7-b019-4cea-b3a6-2c6c8b4ea8c5)
+
+## Exercise 4.02 Prometheus Query:
+
+`sum(kube_pod_info{namespace="prometheus", created_by_kind="StatefulSet"})`
