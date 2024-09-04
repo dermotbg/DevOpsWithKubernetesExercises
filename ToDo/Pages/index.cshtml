@@ -22,19 +22,16 @@
   <ul>
       @foreach (var todo in Model.Todos)
       {
-        <li>
-          @(
-            @todo.IsDone == true
-            ? $"<s>{@todo.Text}</s>"
-            : @todo.Text
-          )
-          @* <form method="post"> *@
+        <li id="@todo.Id-li" style="@(todo.IsDone ? "text-decoration: line-through;" : "")">
+            @todo.Text
+            
             <button 
               type="button"
               name="done"
               id=@todo.Id
               checked=@todo.IsDone
               onclick="markAsDone(@todo.Id)"
+              style="margin-left: 10px;"
             >
               @(
                 @todo.IsDone == true
@@ -42,7 +39,6 @@
                 : "Done"
               )
             </button>
-          @* </form> *@
         </li>
       }
   </ul>
@@ -56,7 +52,12 @@
       const response = await fetch(url, {
         method: 'PUT'
       });
-      console.log(response)
+    if(response.ok){
+      const doneButton = document.getElementById(id);
+      doneButton.innerHTML == "Done" ? doneButton.innerHTML = "Undo" : doneButton.innerHTML = "Done";
+      const listItem = document.getElementById(`${id}-li`);
+      listItem.style.textDecoration === "none" ? listItem.style.textDecoration = "line-through" : listItem.style.textDecoration = "none";
+    }
     } catch (error){
       console.error(error.message)
     }
