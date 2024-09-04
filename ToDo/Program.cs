@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
+using dotenv.net;
 
 var builder = WebApplication.CreateBuilder(args);
 // var config = builder.Configuration;
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 // set port number with export PORT=<PORTNUMBER> command
 var PORT = Environment.GetEnvironmentVariable("PORT") ?? "3000";
 builder.WebHost.UseUrls($"http://0.0.0.0:{PORT}");
+
+DotEnv.Load();
 
 builder.Services.AddRazorPages(options => 
 {

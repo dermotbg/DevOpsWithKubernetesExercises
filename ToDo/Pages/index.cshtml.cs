@@ -1,3 +1,5 @@
+using dotenv.net;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,15 +10,26 @@ public class IndexModel : PageModel
   {
     _client = client;
   }
-  public List<string>? Todos { get; set; }
+  public string BACKEND_URI {get; set;}
+  public class TodoItem 
+  { 
+    public int Id { get; set; } 
+    public string Text { get; set; } = null!;
+    public bool IsDone { get; set; }
+  }
+
+  public List<TodoItem>? Todos { get; set; }
 
   public async Task OnGetAsync()
   {
     try
     {
+      var envVars = DotEnv.Read();
+      BACKEND_URI = envVars["BACKEND_URI"];
       var response = await _client.GetAsync("http://todo-backend-svc:2345/todos");
       response.EnsureSuccessStatusCode();
-      Todos = await response.Content.ReadFromJsonAsync<List<string>>();
+      Console.WriteLine($"HERE IS THE RESPONSE:   {await response.Content.ReadAsStringAsync()}");
+      Todos = await response.Content.ReadFromJsonAsync<List<TodoItem>>();
     }
     catch (System.Exception e)
     {

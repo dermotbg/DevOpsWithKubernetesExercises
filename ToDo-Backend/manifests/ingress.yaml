@@ -4,6 +4,7 @@ metadata:
   # namespace: todo-ns
   name: todo-backend-ingress
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:

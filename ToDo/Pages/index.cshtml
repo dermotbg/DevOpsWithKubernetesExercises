@@ -22,8 +22,44 @@
   <ul>
       @foreach (var todo in Model.Todos)
       {
-        <li>@todo</li>
+        <li>
+          @(
+            @todo.IsDone == true
+            ? $"<s>{@todo.Text}</s>"
+            : @todo.Text
+          )
+          @* <form method="post"> *@
+            <button 
+              type="button"
+              name="done"
+              id=@todo.Id
+              checked=@todo.IsDone
+              onclick="markAsDone(@todo.Id)"
+            >
+              @(
+                @todo.IsDone == true
+                ? "Undo"
+                : "Done"
+              )
+            </button>
+          @* </form> *@
+        </li>
       }
   </ul>
 </body>
+<script>
+  const BACKEND_URI = '@Model.BACKEND_URI';
+  async function markAsDone(id){
+    console.log("fetch function called with ID: " + id);
+    const url = `http://${BACKEND_URI}/todos/${id}`;
+    try{
+      const response = await fetch(url, {
+        method: 'PUT'
+      });
+      console.log(response)
+    } catch (error){
+      console.error(error.message)
+    }
+  }
+</script>
 </html>

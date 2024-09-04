@@ -41,6 +41,20 @@ app.MapGet("/todos", async () =>
   return Results.Json(todos);
 });
 
+app.MapPut("/todos/{id}", async (int id) =>
+{
+  try
+  {
+    await ToDoService.MarkAsDoneAsync(id);
+    return Results.Ok();
+  }
+  catch (System.Exception e)
+  {
+    Console.WriteLine("An error occurred " + e.Message);
+    throw new InvalidOperationException($"An error occurred  + {e.Message}");
+  }
+});
+
 app.MapPost("/todos", async (HttpRequest request) => 
 {
   using StreamReader reader = new StreamReader(request.Body, System.Text.Encoding.UTF8);
@@ -77,7 +91,7 @@ public static class ToDoService
 {
   private static string _connectionString = "Host=todo-postgres-svc;Port=5432;Username=ps_user;Password=SecurePassword;Database=ps_db";
   // postgres://ps_user:SecurePassword@todo-postgres-svc:5432/ps_db
-  private static List<string>? _todos = new List<string>{};
+  private static List<TodoItem>? _todos = new List<TodoItem>{};
   private static Boolean _needsInit = true;
 
   public static async Task<Boolean> InitAsync()
@@ -88,7 +102,8 @@ public static class ToDoService
       await using (var initTableCmd = dataSource.CreateCommand(
       "CREATE TABLE IF NOT EXISTS todos (" +
       "id SERIAL PRIMARY KEY, " +
-      "todo TEXT" +
+      "todo TEXT," +
+      "done BOOLEAN DEFAULT false" +
       "); "))
       {
           await initTableCmd.ExecuteNonQueryAsync();
@@ -96,8 +111,14 @@ public static class ToDoService
       }
       return _needsInit = false;
   }
+    public class TodoItem 
+  { 
+    public int Id { get; set; } 
+    public string Text { get; set; } = null!;
+    public bool IsDone { get; set; }
+  }
   
-  public static async Task<List<string>> GetAsync()
+  public static async Task<List<TodoItem>> GetAsync()
   {
     await using var dataSource = NpgsqlDataSource.Create(_connectionString);
     
@@ -106,19 +127,48 @@ public static class ToDoService
       await InitAsync();
     }
 
-    List<string> todoList = new List<string>{};
-    await using (var cmd = dataSource.CreateCommand("SELECT todo FROM todos;"))
+    List<TodoItem> todoList = new List<TodoItem>{};
+    await using (var cmd = dataSource.CreateCommand("SELECT * FROM todos;"))
     
     await using (var reader = await cmd.ExecuteReaderAsync())
     {
       while (await reader.ReadAsync())
       {
-        todoList.Add(reader.GetString(0));
+        // todoList.Add(reader.GetString(0));
+        int id = reader.GetInt32(reader.GetOrdinal("id"));
+        string text = reader.GetString(reader.GetOrdinal("todo"));
+        bool isDone = reader.GetBoolean(reader.GetOrdinal("done"));
+
+        Console.WriteLine($"Added to TODO list: ID:{id}-TEXT:{text}-isDone:{isDone}");
+
+        TodoItem currentTodo = new TodoItem
+        {
+          Id = id,
+          Text = text,
+          IsDone = isDone
+        };
+
+        todoList.Add(currentTodo);
       }
     }
 
     _todos = todoList;
     return todoList;
+  }
+  public static async Task<IResult> MarkAsDoneAsync(int id)
+  {
+    if(id <= 0)
+    {
+      Console.WriteLine($"Update Rejected: ID: {id} was less than 0");
+      return Results.BadRequest("Update Rejected: ID was less than 0");
+    }
+    await using var dataSource = NpgsqlDataSource.Create(_connectionString);
+    await using (var cmd = dataSource.CreateCommand($"UPDATE todos SET done = NOT done WHERE id = {id};"))
+    {
+      await cmd.ExecuteNonQueryAsync();
+      Console.WriteLine($"Todo with ID: ${id} has been updated.");
+    }
+    return Results.Ok();
   }
   public static async Task<IResult> AddAsync(string newTodo)
   {
@@ -140,7 +190,6 @@ public static class ToDoService
     {
       await cmd.ExecuteNonQueryAsync();
       Console.WriteLine("Todo Accepted:" + newTodo);
-      _todos?.Add(newTodo);
     }
     
     await GetAsync();
