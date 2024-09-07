@@ -63,7 +63,7 @@ spec:
         name: todo-postgres-data-storage
       spec: 
         accessModes: ["ReadWriteOnce"]
-        # storageClassName: local-path
+        storageClassName: local-path # remove for gcloud
         resources:
           requests:
             storage: 100Mi 

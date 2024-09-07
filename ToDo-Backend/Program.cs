@@ -2,16 +2,28 @@ using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var PORT = Environment.GetEnvironmentVariable("PORT") ?? "3000";
+var PORT = Environment.GetEnvironmentVariable("PORT") ?? "3001";
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options => 
+{
+  options.AddDefaultPolicy(
+    builder => 
+    {
+      builder.AllowAnyOrigin()
+             .AllowAnyMethod()
+             .AllowAnyHeader();
+    });
+});
 
 builder.WebHost.UseUrls($"http://0.0.0.0:{PORT}");
 
 Console.WriteLine($"Server running on PORT: {PORT}");
 
 var app = builder.Build();
+
+app.UseCors();
 
 // ENDPOINTS
 app.MapGet("/healthz", () => {

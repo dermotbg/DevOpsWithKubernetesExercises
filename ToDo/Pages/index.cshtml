@@ -47,10 +47,14 @@
   const BACKEND_URI = '@Model.BACKEND_URI';
   async function markAsDone(id){
     console.log("fetch function called with ID: " + id);
-    const url = `http://${BACKEND_URI}/todos/${id}`;
+    // const url = `http://${BACKEND_URI}/todos/${id}`; <=== for GKE cluster
+    const url = `http://localhost:3001/todos/${id}`;
     try{
       const response = await fetch(url, {
-        method: 'PUT'
+        method: 'PUT',
+        headers: {
+            "Access-Control-Allow-Origin": "*"
+            }
       });
     if(response.ok){
       const doneButton = document.getElementById(id);

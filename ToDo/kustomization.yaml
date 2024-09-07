@@ -7,4 +7,4 @@ resources:
   - manifests/autoscaler.yaml
 images:
   - name: PROJECT/IMAGE
-    newName: dermotbg/todo:v4
+    newName: dermotbg/todo:v4.13

@@ -5,8 +5,8 @@ resources:
   - manifests/service.yaml
   - manifests/ingress.yaml
   - manifests/todo-postgres-statefulset.yaml
-  - manifests/pvc-gke.yaml
+  # - manifests/pvc-gke.yaml #add in for gcloud
   - manifests/autoscaler.yaml
 images:
   - name: PROJECT/IMAGE
-    newName: dermotbg/todo-backend:v0.6.6.6
+    newName: dermotbg/todo-backend:v0.6.8
